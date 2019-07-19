@@ -5,11 +5,13 @@ import java.util.Scanner;
 public class Create {
     private Scanner scanner;
     private int id;
+    private String name;
 
     public Create() {
         scanner = new Scanner(System.in);
         id = -1;
     }
+
     public void getID() {
         System.out.println("Please enter an ID Number to create your profile");
         boolean done = false;
@@ -26,9 +28,32 @@ public class Create {
             }
         }
     }
-    public void registerID(LogWriter w) throws IOException {
-        if(w.addID(id)) {
-            System.out.println("Profile successfully created. You may now sign in.");
+
+    public void getName() {
+        System.out.println("Please enter your name (First Last)");
+        boolean done = false;
+        while (!done) {
+            try {
+                scanner.nextLine();
+                name = scanner.nextLine();
+                done = true;
+            } catch (InputMismatchException e) {
+                if (scanner.nextLine().equals("close")) {
+                    System.exit(0);
+                } else {
+                    System.out.println("Invalid input, please try again");
+                }
+            }
+        }
+    }
+
+    public void registerID(LogWriter w, TotalWriter t) throws IOException {
+        if (w.addID(id) && t.addID(id)) {
+            if(t.addName(id, name, scanner)) {
+                System.out.println("Profile successfully created. You may now sign in.");
+                t.writeToCSV();
+            } else {
+            }
         } else {
             System.out.println("ID already exists, please sign in or try with another ID.");
         }

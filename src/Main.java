@@ -30,8 +30,9 @@ public class Main {
                 signIn.toLogWriter(logWriter);
             } else if (mode.equals("create")) {
                 create.getID();
+                create.getName();
                 logWriter.toArray();
-                create.registerID(logWriter);
+                create.registerID(logWriter, totalWriter);
             } else if (mode.equals("out")) {
                 signOut.getID();
                 logWriter.toArray();

@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.Scanner;
 
 public class TotalWriter {
     private File totals;
@@ -42,16 +43,71 @@ public class TotalWriter {
         toArray();
         return list;
     }
+    public boolean addID(int id) {
+        for(int i = 1; i < list.length; i++) {
+            if(list[i][0] != null && list[i][0].equals(Integer.toString(id))) {
+                return false;
+            }
+        }
+        for(int i = 0; i < list.length; i++) {
+            if((list[i][0] != null && list[i][0].equals(" ")) || list[i][0] == null) {
+                list[i][0] = Integer.toString(id);
+                return true;
+            }
+        }
+        return true;
+    }
+    public boolean addName(int id, String name, Scanner scanner) {
+        for(int i = 1; i < list.length; i++) {
+            if(list[i][1] != null && list[i][1].equals(name)) {
+                System.out.println("Another ID already is already registered for that name. Continue anyways? (y/n)");
+                if(requestDuplicateName(scanner)) {
+                    list[findID(id)][1] = name;
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        list[findID(id)][1] = name;
+        return true;
+    }
+    public boolean requestDuplicateName(Scanner scanner) {
+        String response = scanner.next();
+        if (response.equals("y")) {
+            System.out.println("Duplicate name added.");
+            return true;
+        } else if (response.equals("n")) {
+            System.out.println("Registration cancelled");
+            return false;
+        } else {
+            if (response.equals("close")) {
+                System.exit(0);
+            }
+            System.out.println("Invalid response, please try again (y for yes, n for no)");
+            return requestDuplicateName(scanner);
+        }
+    }
+
+    public int findID(int id) {
+        for(int i = 0; i < list.length; i++) {
+            if(list[i][0] != null && list[i][0].equals(Integer.toString(id))) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     public void addTotal(String id, double hours) {
         for (int i = 1; i < list.length; i++) {
             if(list[i][0] != null && list[i][0].equals(id)) {
-                list[i][1] = Double.toString(hours);
+                list[i][2] = Double.toString(hours);
                 break;
             }
             else if ((list[i][0] != null && list[i][0].equals(" ")) || list[i][0] == null) {
+                System.out.println("ID " + id + " was not used for proper profile creation. Please notify administrator");
                 list[i][0] = id;
-                list[i][1] = Double.toString(hours);
+                list[i][2] = Double.toString(hours);
                 break;
             }
         }
