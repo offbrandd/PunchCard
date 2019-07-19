@@ -31,7 +31,7 @@ public class SignIn {
         }
     }
 
-    public void toWriter(Writer w) throws IOException {
+    public void toLogWriter(LogWriter w) throws IOException {
         date = LocalDate.now().toString();
         timeIn = (LocalTime.now().toString()).substring(0, 8);
         w.addSignIn(id, timeIn, date, scanner);

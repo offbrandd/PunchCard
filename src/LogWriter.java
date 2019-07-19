@@ -2,14 +2,14 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Writer {
+public class LogWriter {
     private BufferedReader reader;
     private BufferedWriter writer;
     private File log;
     private String[][] list;
     private int maxRows, maxCols;
 
-    public Writer() throws FileNotFoundException, IOException {
+    public LogWriter() throws FileNotFoundException, IOException {
         log = new File("../output/log.csv");
         reader = new BufferedReader(new FileReader(log));
         writer = new BufferedWriter(new FileWriter(log, true));
@@ -37,6 +37,10 @@ public class Writer {
             }
             line = reader.readLine();
         }
+    }
+    public String[][] getArray() throws IOException {
+        toArray();
+        return list;
     }
 
     public void addSignIn(int id, String timeIn, String date, Scanner scanner) throws IOException {
@@ -157,8 +161,8 @@ public class Writer {
         writer.close();
         log.delete();
         log.createNewFile();
-        writer = new BufferedWriter(new FileWriter(log, true));
         reader = new BufferedReader(new FileReader(log));
+        writer = new BufferedWriter(new FileWriter(log, true));
 
         for (int i = 0; i < list.length; i++) {
             for (int j = 0; j < list[0].length; j++) {

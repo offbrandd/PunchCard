@@ -32,10 +32,9 @@ public class SignOut {
         }
     }
 
-    public void addSignOut(Writer w) throws IOException {
+    public void addSignOut(LogWriter w) throws IOException {
         date = LocalDate.now().toString();
         timeOut = (LocalTime.now().toString()).substring(0, 8);
-        System.out.println("Time Out: " + timeOut);
         w.addSignOut(id, timeOut, date, scanner);
     }
 }

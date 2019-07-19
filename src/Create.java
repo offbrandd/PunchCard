@@ -8,10 +8,10 @@ public class Create {
 
     public Create() {
         scanner = new Scanner(System.in);
-        System.out.println("Please enter an ID Number to create your profile");
         id = -1;
     }
     public void getID() {
+        System.out.println("Please enter an ID Number to create your profile");
         boolean done = false;
         while (!done) {
             try {
@@ -26,7 +26,7 @@ public class Create {
             }
         }
     }
-    public void registerID(Writer w) throws IOException {
+    public void registerID(LogWriter w) throws IOException {
         if(w.addID(id)) {
             System.out.println("Profile successfully created. You may now sign in.");
         } else {
