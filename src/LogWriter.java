@@ -38,6 +38,7 @@ public class LogWriter {
             line = reader.readLine();
         }
     }
+
     public String[][] getArray() throws IOException {
         toArray();
         return list;
@@ -46,14 +47,14 @@ public class LogWriter {
     public void addSignIn(int id, String timeIn, String date, Scanner scanner) throws IOException {
         int column = findID(id);
         int row = findDate(date);
-        if(column == -1) {
+        if (column == -1) {
             return;
         }
         if (list[row][column] != null && !list[row][column].equals(" ")) {
-            System.out.println(
-                    "A Sign in time for this date and ID has already been logged. Would you like to replace it? (y/n)");
-            if (requestOverwrite(scanner)) {
-                list[row][column] = timeIn;
+            System.out.println("A Sign in time for this date and ID has already been logged. Add another? (y/n)");
+            if (requestAdditional(scanner)) {
+                list[row + 2][column] = timeIn;
+                list[row + 2][0] = date;
             }
         } else {
             list[row][column] = timeIn;
@@ -61,10 +62,10 @@ public class LogWriter {
         writeToCSV();
     }
 
-    public boolean requestOverwrite(Scanner scanner) {
+    public boolean requestAdditional(Scanner scanner) {
         String response = scanner.next();
         if (response.equals("y")) {
-            System.out.println("Entry overwritten.");
+            System.out.println("Additional entry added.");
             return true;
         } else if (response.equals("n")) {
             System.out.println("Entry cancelled");
@@ -74,7 +75,7 @@ public class LogWriter {
                 System.exit(0);
             }
             System.out.println("Invalid response, please try again ( y for yes, n for no)");
-            return requestOverwrite(scanner);
+            return requestAdditional(scanner);
         }
     }
 
@@ -96,30 +97,33 @@ public class LogWriter {
 
     public int findDate(String date) {
         int row = 1;
-        boolean datePresent = false;
-        for (int i = 0; i < list.length; i++) {
-            if (list[i][0] != null && list[i][0].equals(date)) {
-                row = i;
-                datePresent = true;
-                break;
-            } else if (list[i][0] != null && !list[i][0].equals(" ")) {
+        System.out.println(date);
+        for (int i = list.length - 1; i >= 0; i--) {
+            if (list[i][0] != null && !list[i][0].equals(" ") && !list[i][0].equals(date)) {
+                System.out.println("Found string != date");
                 row = i + 2;
+                list[row][0] = date;
+                break;
+            } else if(list[i][0] != null && list[i][0].equals(date)) {
+                System.out.println("Found date");
+                row = i;
+                break;
             }
         }
-        if (!datePresent) {
-            list[row][0] = date;
-        }
+        //list[row][0] = date;
         return row;
     }
+
     public void addSignOut(int id, String timeOut, String date, Scanner scanner) throws IOException {
         int column = findID(id);
         int row = findDate(date);
-        if(column == -1) return;
+        if (column == -1)
+            return;
 
-        if(list[row][column] != null && !list[row][column].equals(" ")) {
-            if(list[row + 1][column] != null && !list[row][column + 1].equals(" ")) {
+        if (list[row][column] != null && !list[row][column].equals(" ")) {
+            if (list[row + 1][column] != null && !list[row + 1][column].equals(" ")) {
                 System.out.println("ID has already been signed out. Would you like to override the entry? (y/n)");
-                if(requestOverwrite(scanner)) {
+                if (requestAdditional(scanner)) {
                     list[row + 1][column] = timeOut;
                 }
             } else {
@@ -129,25 +133,26 @@ public class LogWriter {
             }
         } else {
             list[row + 1][column] = timeOut;
-            System.out.println("ID was not signed in. Sign out time will be logged. See Programming Director with sign in time for manual entry.");
+            System.out.println(
+                    "ID was not signed in. Sign out time will be logged. See Administrator with your sign in time for manual entry.");
 
         }
         writeToCSV();
     }
 
-    public boolean addID(int id) throws IOException{
+    public boolean addID(int id) throws IOException {
         int column = -1;
         boolean idPresent = false;
         for (int j = 0; j < list[0].length; j++) {
             if (list[0][j] != null && list[0][j].equals(Integer.toString(id))) {
                 idPresent = true;
                 break;
-            } else if((list[0][j] != null && list[0][j].equals(" ")) || list[0][j] == null) {
+            } else if ((list[0][j] != null && list[0][j].equals(" ")) || list[0][j] == null) {
                 column = j;
                 break;
             }
         }
-        if(idPresent) {
+        if (idPresent) {
             return false;
         } else {
             list[0][column] = Integer.toString(id);

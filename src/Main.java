@@ -19,8 +19,9 @@ public class Main {
         create = new Create();
         total = new Total(logWriter);
         scanner = new Scanner(System.in);
+        System.out.println("\nPunchCard");
         while (true) {
-            System.out.println("At any time, type 'close' and hit enter to close the application");
+            System.out.println("\nAt any time, type 'close' and hit enter to close the application");
             System.out.println(
                     "Would you like to sign in, sign out, create a profile, or output total hours? (in/out/create/total)");
             String mode = scanner.next();

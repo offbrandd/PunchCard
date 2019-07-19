@@ -27,7 +27,6 @@ public class Total {
                 logRow = 0;
                 String id = list[0][j];
                 double hours = millisToHours(getIDTotal(j));
-                System.out.println("Hours for " + id + ": " + hours);
                 w.addTotal(id, hours);
             } else {
                 System.out.println("All ID totals calculated");
