@@ -1,4 +1,6 @@
+import java.io.File;
 import java.util.Scanner;
+
 
 public class Main {
     private static SignIn signIn;
@@ -6,6 +8,7 @@ public class Main {
     private static Writer writer;
     private static Create create;
     private static Scanner scanner;
+    private static File file;
 
     public static void main(String[] args) throws Exception {
         signIn = new SignIn();
