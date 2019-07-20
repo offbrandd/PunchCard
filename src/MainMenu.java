@@ -53,7 +53,7 @@ public class MainMenu {
             public void actionPerformed(ActionEvent e) {
                 toggleVisible();
                 frame.repaint();
-                Main.signIn();
+                Main.showSignIn();
             }
         });
         signOut.addActionListener(new ActionListener() {

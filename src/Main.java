@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Main {
     private static SignIn signIn;
     private static SignOut signOut;
-    private static LogWriter logWriter;
+    public static LogWriter logWriter;
     public static TotalWriter totalWriter;
     private static Create create;
     private static Total total;
@@ -14,11 +14,13 @@ public class Main {
     private static Frame frame;
     private static MainMenu mainMenu;
     private static CreateMenu createMenu;
+    private static SignInMenu signInMenu;
 
     public static void main(String[] args) throws Exception {
         frame = new Frame();
         mainMenu = new MainMenu(frame);
         createMenu = new CreateMenu(frame);
+        signInMenu = new SignInMenu(frame);
         signIn = new SignIn();
         signOut = new SignOut();
         logWriter = new LogWriter();
@@ -32,12 +34,14 @@ public class Main {
         mainMenu.toggleVisible();
     }
 
-    public static void signIn() {
+    public static void showSignIn() {
+        signInMenu.toggleVisible();
+    }
+    public static void signIn(String date, int id) {
         try {
-            signIn.getID();
             logWriter.toArray();
-            signIn.toLogWriter(logWriter);
-        } catch (IOException e) { // this is definitely bad practice,
+            signIn.toLogWriter(logWriter, date, id);
+        } catch (IOException e) {
         }
 
     }
@@ -53,14 +57,7 @@ public class Main {
 
     public static void showCreate() {
         createMenu.toggleVisible();
-        /*
-        try {
-            create.getID();
-            create.getName();
-            logWriter.toArray();
-            create.registerID(logWriter, totalWriter);
-        } catch (IOException e) {
-        } */
+ 
     }
     public static void create(String name, int id) {
         try {
