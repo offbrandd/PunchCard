@@ -100,17 +100,15 @@ public class LogWriter {
         System.out.println(date);
         for (int i = list.length - 1; i >= 0; i--) {
             if (list[i][0] != null && !list[i][0].equals(" ") && !list[i][0].equals(date)) {
-                System.out.println("Found string != date");
                 row = i + 2;
                 list[row][0] = date;
                 break;
-            } else if(list[i][0] != null && list[i][0].equals(date)) {
-                System.out.println("Found date");
+            } else if (list[i][0] != null && list[i][0].equals(date)) {
                 row = i;
                 break;
             }
         }
-        //list[row][0] = date;
+        // list[row][0] = date;
         return row;
     }
 
@@ -140,25 +138,17 @@ public class LogWriter {
         writeToCSV();
     }
 
-    public boolean addID(int id) throws IOException {
+    public void addID(int id) throws IOException {
         int column = -1;
-        boolean idPresent = false;
         for (int j = 0; j < list[0].length; j++) {
-            if (list[0][j] != null && list[0][j].equals(Integer.toString(id))) {
-                idPresent = true;
-                break;
-            } else if ((list[0][j] != null && list[0][j].equals(" ")) || list[0][j] == null) {
+            if ((list[0][j] != null && list[0][j].equals(" ")) || list[0][j] == null) {
                 column = j;
                 break;
             }
         }
-        if (idPresent) {
-            return false;
-        } else {
-            list[0][column] = Integer.toString(id);
-            writeToCSV();
-            return true;
-        }
+        list[0][column] = Integer.toString(id);
+        writeToCSV();
+
     }
 
     public void writeToCSV() throws IOException {
