@@ -1,6 +1,4 @@
-import java.io.File;
 import java.io.IOException;
-import java.util.Scanner;
 
 public class Main {
     private static SignIn signIn;
@@ -9,25 +7,24 @@ public class Main {
     public static TotalWriter totalWriter;
     private static Create create;
     private static Total total;
-    private static Scanner scanner;
-    private static File file;
     private static Frame frame;
     private static MainMenu mainMenu;
     private static CreateMenu createMenu;
     private static SignInMenu signInMenu;
+    private static SignOutMenu signOutMenu;
 
     public static void main(String[] args) throws Exception {
         frame = new Frame();
         mainMenu = new MainMenu(frame);
         createMenu = new CreateMenu(frame);
         signInMenu = new SignInMenu(frame);
+        signOutMenu = new SignOutMenu(frame);
         signIn = new SignIn();
         signOut = new SignOut();
         logWriter = new LogWriter();
         totalWriter = new TotalWriter();
         create = new Create();
         total = new Total(logWriter);
-        scanner = new Scanner(System.in);
     }
 
     public static void mainMenu() {
@@ -45,12 +42,13 @@ public class Main {
         }
 
     }
-
-    public static void signOut() {
+    public static void showSignOut() {
+        signOutMenu.toggleVisible();
+    }
+    public static void signOut(String date, int id) {
         try {
-            signOut.getID();
             logWriter.toArray();
-            signOut.addSignOut(logWriter);
+            signOut.addSignOut(logWriter, date, id);
         } catch (IOException e) {
         }
     }

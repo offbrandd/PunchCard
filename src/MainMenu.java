@@ -60,7 +60,7 @@ public class MainMenu {
             public void actionPerformed(ActionEvent e) {
                 toggleVisible();
                 frame.repaint();
-                Main.signOut();
+                Main.showSignOut();
             }
         });
         create.addActionListener(new ActionListener() {
@@ -72,8 +72,6 @@ public class MainMenu {
         });
         total.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                toggleVisible();
-                frame.repaint();
                 Main.total();
             }
         });

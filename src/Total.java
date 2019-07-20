@@ -29,11 +29,11 @@ public class Total {
                 double hours = millisToHours(getIDTotal(j));
                 w.addTotal(id, hours);
             } else {
-                System.out.println("All ID totals calculated");
                 break;
             }
         }
         w.writeToCSV();
+        w.closingMessage();
     }
 
     public long getIDTotal(int column) throws ParseException {

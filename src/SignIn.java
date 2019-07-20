@@ -1,10 +1,7 @@
-import java.util.InputMismatchException;
-import java.util.Scanner;
 import java.io.IOException;
 import java.time.*;
 
 public class SignIn {
-    private String date;
     private String timeIn;
 
     public SignIn() {

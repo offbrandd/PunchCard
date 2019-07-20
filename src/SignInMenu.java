@@ -77,7 +77,7 @@ public class SignInMenu {
                     }
                     boolean dateReady = true;
                     if (Main.logWriter.isDatePresent(date)) {
-                        if (Main.logWriter.isTimeInPresent(date, id)) {
+                        if (Main.logWriter.isSignInPresent(date, id)) {
                             if (requestAdditional()) {
                                 Main.logWriter.addDate(date);
                             } else {
@@ -90,6 +90,7 @@ public class SignInMenu {
                     }
                     if (idPresent && dateReady) {
                         Main.signIn(date, id);
+                        finishSignIn();
                     }
 
                 } catch (NumberFormatException ex) {
@@ -117,10 +118,14 @@ public class SignInMenu {
             return false;
         }
     }
+    private void clearTextBoxes() {
+        idField.setText("");
+    }
 
     private void finishSignIn() {
         JOptionPane.showMessageDialog(null, "Sign In time successfully entered.");
         toggleVisible();
+        clearTextBoxes();
         Main.mainMenu();
 
     }

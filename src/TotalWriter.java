@@ -1,5 +1,11 @@
+import java.awt.Dimension;
 import java.io.*;
 import java.util.Scanner;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
 
 public class TotalWriter {
     private File totals;
@@ -134,6 +140,13 @@ public class TotalWriter {
             writer.write("\n");
         }
         writer.flush();
+    }
+    public void closingMessage() {
+        String path = totals.getAbsolutePath();
+        String temp = path;
+        path = temp.substring(0, temp.indexOf("src"));
+        path += temp.substring(temp.indexOf("..") + 3); //removes the "src/../" from the absolute path
+        JOptionPane.showMessageDialog(null, "Total hours successfully exported to: " + path);
     }
 
 }

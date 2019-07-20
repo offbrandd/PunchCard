@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class LogWriter {
@@ -53,11 +52,9 @@ public class LogWriter {
 
     public int findID(int id) {
         int column = -1;
-        boolean idPresent = false;
         for (int j = 1; j < list[0].length; j++) {
             if (list[0][j] != null && list[0][j].equals(Integer.toString(id))) {
                 column = j;
-                idPresent = true;
                 break;
             }
         }
@@ -103,7 +100,7 @@ public class LogWriter {
         list[row][0] = date;
     }
 
-    public boolean isTimeInPresent(String date, int id) {
+    public boolean isSignInPresent(String date, int id) {
         int row = findDate(date);
         int column = findID(id);
         if (list[row][column] != null && !list[row][column].equals(" ")) {
@@ -112,31 +109,21 @@ public class LogWriter {
             return false;
         }
     }
-
-    public void addSignOut(int id, String timeOut, String date, Scanner scanner) throws IOException {
-     /*   int column = findID(id);
-        int row = findDate(date);
-        if (column == -1)
-            return;
-
-        if (list[row][column] != null && !list[row][column].equals(" ")) {
-            if (list[row + 1][column] != null && !list[row + 1][column].equals(" ")) {
-                System.out.println("ID has already been signed out. Would you like to override the entry? (y/n)");
-                if (requestAdditional(scanner)) {
-                    list[row + 1][column] = timeOut;
-                }
-            } else {
-                list[row + 1][column] = timeOut;
-                System.out.println(list[row + 1][column]);
-                System.out.println("ID successfully signed out.");
-            }
+    public boolean isSignOutPresent(String date, int id) {
+        int row = findDate(date) + 1;
+        int column = findID(id);
+        if(list[row][column] != null && !list[row][column].equals(" ")) {
+            return true;
         } else {
-            list[row + 1][column] = timeOut;
-            System.out.println(
-                    "ID was not signed in. Sign out time will be logged. See Administrator with your sign in time for manual entry.");
-
+            return false;
         }
-        writeToCSV(); */
+    }
+
+    public void addSignOut(int id, String timeOut, String date) throws IOException {
+        int column = findID(id);
+        int row = findDate(date) + 1;
+        list[row][column] = timeOut;
+        writeToCSV();
     }
 
     public void addID(int id) throws IOException {
