@@ -1,5 +1,11 @@
+import java.awt.Dimension;
 import java.io.*;
 import java.util.Scanner;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
 
 public class TotalWriter {
     private File totals;
@@ -43,35 +49,37 @@ public class TotalWriter {
         toArray();
         return list;
     }
-    public boolean addID(int id) {
-        for(int i = 1; i < list.length; i++) {
-            if(list[i][0] != null && list[i][0].equals(Integer.toString(id))) {
-                return false;
+
+    public void addID(int id) {
+        for (int i = 0; i < list.length; i++) {
+            if ((list[i][0] != null && list[i][0].equals(" ")) || list[i][0] == null) {
+                list[i][0] = Integer.toString(id);
+                return;
             }
         }
-        for(int i = 0; i < list.length; i++) {
-            if((list[i][0] != null && list[i][0].equals(" ")) || list[i][0] == null) {
-                list[i][0] = Integer.toString(id);
+    }
+
+    public void addName(int id, String name, Scanner scanner) {
+        list[findID(id)][1] = name;
+    }
+
+    public boolean isNamePresent(String name) {
+        for (int i = 1; i < list.length; i++) {
+            if (list[i][1] != null && list[i][1].equals(name)) {
                 return true;
             }
         }
-        return true;
+        return false;
     }
-    public boolean addName(int id, String name, Scanner scanner) {
-        for(int i = 1; i < list.length; i++) {
-            if(list[i][1] != null && list[i][1].equals(name)) {
-                System.out.println("Another ID already is already registered for that name. Continue anyways? (y/n)");
-                if(requestDuplicateName(scanner)) {
-                    list[findID(id)][1] = name;
-                    return true;
-                } else {
-                    return false;
-                }
+    public boolean isIDPresent(int id) {
+        for (int i = 1; i < list.length; i++) {
+            if (list[i][0] != null && list[i][0].equals(Integer.toString(id))) {
+                return true;
             }
         }
-        list[findID(id)][1] = name;
-        return true;
+        return false;
     }
+
     public boolean requestDuplicateName(Scanner scanner) {
         String response = scanner.next();
         if (response.equals("y")) {
@@ -90,8 +98,8 @@ public class TotalWriter {
     }
 
     public int findID(int id) {
-        for(int i = 0; i < list.length; i++) {
-            if(list[i][0] != null && list[i][0].equals(Integer.toString(id))) {
+        for (int i = 0; i < list.length; i++) {
+            if (list[i][0] != null && list[i][0].equals(Integer.toString(id))) {
                 return i;
             }
         }
@@ -100,12 +108,12 @@ public class TotalWriter {
 
     public void addTotal(String id, double hours) {
         for (int i = 1; i < list.length; i++) {
-            if(list[i][0] != null && list[i][0].equals(id)) {
+            if (list[i][0] != null && list[i][0].equals(id)) {
                 list[i][2] = Double.toString(hours);
                 break;
-            }
-            else if ((list[i][0] != null && list[i][0].equals(" ")) || list[i][0] == null) {
-                System.out.println("ID " + id + " was not used for proper profile creation. Please notify administrator");
+            } else if ((list[i][0] != null && list[i][0].equals(" ")) || list[i][0] == null) {
+                System.out
+                        .println("ID " + id + " was not used for proper profile creation. Please notify administrator");
                 list[i][0] = id;
                 list[i][2] = Double.toString(hours);
                 break;
@@ -132,6 +140,13 @@ public class TotalWriter {
             writer.write("\n");
         }
         writer.flush();
+    }
+    public void closingMessage() {
+        String path = totals.getAbsolutePath();
+        String temp = path;
+        path = temp.substring(0, temp.indexOf("src"));
+        path += temp.substring(temp.indexOf("..") + 3); //removes the "src/../" from the absolute path
+        JOptionPane.showMessageDialog(null, "Total hours successfully exported to: " + path);
     }
 
 }

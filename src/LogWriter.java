@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class LogWriter {
@@ -44,121 +43,100 @@ public class LogWriter {
         return list;
     }
 
-    public void addSignIn(int id, String timeIn, String date, Scanner scanner) throws IOException {
+    public void addSignIn(int id, String timeIn, String date) throws IOException {
         int column = findID(id);
         int row = findDate(date);
-        if (column == -1) {
-            return;
-        }
-        if (list[row][column] != null && !list[row][column].equals(" ")) {
-            System.out.println("A Sign in time for this date and ID has already been logged. Add another? (y/n)");
-            if (requestAdditional(scanner)) {
-                list[row + 2][column] = timeIn;
-                list[row + 2][0] = date;
-            }
-        } else {
-            list[row][column] = timeIn;
-        }
+        list[row][column] = timeIn;
         writeToCSV();
-    }
-
-    public boolean requestAdditional(Scanner scanner) {
-        String response = scanner.next();
-        if (response.equals("y")) {
-            System.out.println("Additional entry added.");
-            return true;
-        } else if (response.equals("n")) {
-            System.out.println("Entry cancelled");
-            return false;
-        } else {
-            if (response.equals("close")) {
-                System.exit(0);
-            }
-            System.out.println("Invalid response, please try again ( y for yes, n for no)");
-            return requestAdditional(scanner);
-        }
     }
 
     public int findID(int id) {
         int column = -1;
-        boolean idPresent = false;
         for (int j = 1; j < list[0].length; j++) {
             if (list[0][j] != null && list[0][j].equals(Integer.toString(id))) {
                 column = j;
-                idPresent = true;
-                break;
-            } else if ((list[0][j] != null && list[0][j].equals(" ")) || list[0][j] == null) {
-                System.out.println("ID not registered. Please create a profile or try another ID");
                 break;
             }
         }
         return column;
     }
 
+    public boolean isIDPresent(int id) {
+        for (int j = 1; j < list[0].length; j++) {
+            if (list[0][j] != null && list[0][j].equals(Integer.toString(id))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public int findDate(String date) {
         int row = 1;
-        System.out.println(date);
         for (int i = list.length - 1; i >= 0; i--) {
-            if (list[i][0] != null && !list[i][0].equals(" ") && !list[i][0].equals(date)) {
-                System.out.println("Found string != date");
-                row = i + 2;
-                list[row][0] = date;
-                break;
-            } else if(list[i][0] != null && list[i][0].equals(date)) {
-                System.out.println("Found date");
+            if (list[i][0] != null && list[i][0].equals(date)) {
                 row = i;
                 break;
             }
         }
-        //list[row][0] = date;
         return row;
     }
 
-    public void addSignOut(int id, String timeOut, String date, Scanner scanner) throws IOException {
-        int column = findID(id);
-        int row = findDate(date);
-        if (column == -1)
-            return;
-
-        if (list[row][column] != null && !list[row][column].equals(" ")) {
-            if (list[row + 1][column] != null && !list[row + 1][column].equals(" ")) {
-                System.out.println("ID has already been signed out. Would you like to override the entry? (y/n)");
-                if (requestAdditional(scanner)) {
-                    list[row + 1][column] = timeOut;
-                }
-            } else {
-                list[row + 1][column] = timeOut;
-                System.out.println(list[row + 1][column]);
-                System.out.println("ID successfully signed out.");
+    public boolean isDatePresent(String date) {
+        for (int i = list.length - 1; i >= 0; i--) {
+            if (list[i][0] != null && list[i][0].equals(date)) {
+                return true;
             }
-        } else {
-            list[row + 1][column] = timeOut;
-            System.out.println(
-                    "ID was not signed in. Sign out time will be logged. See Administrator with your sign in time for manual entry.");
-
         }
+        return false;
+    }
+    public void addDate(String date) {
+        int row = 0;
+        for (int i = list.length - 1; i >= 0; i--) {
+            if(list[i][0] != null && !list[i][0].equals(" ")) {
+                row = i + 2;
+                break;
+            }
+        }
+        list[row][0] = date;
+    }
+
+    public boolean isSignInPresent(String date, int id) {
+        int row = findDate(date);
+        int column = findID(id);
+        if (list[row][column] != null && !list[row][column].equals(" ")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public boolean isSignOutPresent(String date, int id) {
+        int row = findDate(date) + 1;
+        int column = findID(id);
+        if(list[row][column] != null && !list[row][column].equals(" ")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void addSignOut(int id, String timeOut, String date) throws IOException {
+        int column = findID(id);
+        int row = findDate(date) + 1;
+        list[row][column] = timeOut;
         writeToCSV();
     }
 
-    public boolean addID(int id) throws IOException {
+    public void addID(int id) throws IOException {
         int column = -1;
-        boolean idPresent = false;
         for (int j = 0; j < list[0].length; j++) {
-            if (list[0][j] != null && list[0][j].equals(Integer.toString(id))) {
-                idPresent = true;
-                break;
-            } else if ((list[0][j] != null && list[0][j].equals(" ")) || list[0][j] == null) {
+            if ((list[0][j] != null && list[0][j].equals(" ")) || list[0][j] == null) {
                 column = j;
                 break;
             }
         }
-        if (idPresent) {
-            return false;
-        } else {
-            list[0][column] = Integer.toString(id);
-            writeToCSV();
-            return true;
-        }
+        list[0][column] = Integer.toString(id);
+        writeToCSV();
+
     }
 
     public void writeToCSV() throws IOException {
