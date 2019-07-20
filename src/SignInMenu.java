@@ -70,23 +70,25 @@ public class SignInMenu {
                     String date = LocalDate.now().toString();
                     int id = Integer.parseInt(idField.getText());
                     boolean idPresent = true;
-                    if (!Main.logWriter.isIDPresent(id)) {
+                    boolean dateReady = true;
+
+                    if (Main.logWriter.isIDPresent(id)) {
+                        if (Main.logWriter.isDatePresent(date)) {
+                            if (Main.logWriter.isSignInPresent(date, id)) {
+                                if (requestAdditional()) {
+                                    Main.logWriter.addDate(date);
+                                } else {
+                                    dateReady = false;
+                                    JOptionPane.showMessageDialog(null, "Entry cancelled.");
+                                }
+                            }
+                        } else {
+                            Main.logWriter.addDate(date);
+                        }
+                    } else {
                         JOptionPane.showMessageDialog(null,
                                 "ID is not registered. Please create a profile or try again with another ID");
                         idPresent = false;
-                    }
-                    boolean dateReady = true;
-                    if (Main.logWriter.isDatePresent(date)) {
-                        if (Main.logWriter.isSignInPresent(date, id)) {
-                            if (requestAdditional()) {
-                                Main.logWriter.addDate(date);
-                            } else {
-                                dateReady = false;
-                                JOptionPane.showMessageDialog(null, "Entry cancelled.");
-                            }
-                        }
-                    } else {
-                        Main.logWriter.addDate(date);
                     }
                     if (idPresent && dateReady) {
                         Main.signIn(date, id);
@@ -118,6 +120,7 @@ public class SignInMenu {
             return false;
         }
     }
+
     private void clearTextBoxes() {
         idField.setText("");
     }

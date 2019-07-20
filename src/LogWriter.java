@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.Scanner;
 
 public class LogWriter {
     private BufferedReader reader;
@@ -89,10 +88,11 @@ public class LogWriter {
         }
         return false;
     }
+
     public void addDate(String date) {
         int row = 0;
         for (int i = list.length - 1; i >= 0; i--) {
-            if(list[i][0] != null && !list[i][0].equals(" ")) {
+            if (list[i][0] != null && !list[i][0].equals(" ")) {
                 row = i + 2;
                 break;
             }
@@ -109,10 +109,11 @@ public class LogWriter {
             return false;
         }
     }
+
     public boolean isSignOutPresent(String date, int id) {
         int row = findDate(date) + 1;
         int column = findID(id);
-        if(list[row][column] != null && !list[row][column].equals(" ")) {
+        if (list[row][column] != null && !list[row][column].equals(" ")) {
             return true;
         } else {
             return false;

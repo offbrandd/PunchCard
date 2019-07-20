@@ -1,11 +1,7 @@
-import java.awt.Dimension;
 import java.io.*;
 import java.util.Scanner;
 
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
 
 public class TotalWriter {
     private File totals;
@@ -78,23 +74,6 @@ public class TotalWriter {
             }
         }
         return false;
-    }
-
-    public boolean requestDuplicateName(Scanner scanner) {
-        String response = scanner.next();
-        if (response.equals("y")) {
-            System.out.println("Duplicate name added.");
-            return true;
-        } else if (response.equals("n")) {
-            System.out.println("Registration cancelled");
-            return false;
-        } else {
-            if (response.equals("close")) {
-                System.exit(0);
-            }
-            System.out.println("Invalid response, please try again (y for yes, n for no)");
-            return requestDuplicateName(scanner);
-        }
     }
 
     public int findID(int id) {

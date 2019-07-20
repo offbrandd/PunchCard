@@ -1,8 +1,5 @@
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 
 public class SignOut {
     private String timeOut;
