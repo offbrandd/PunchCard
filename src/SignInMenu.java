@@ -1,6 +1,8 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -71,12 +73,17 @@ public class SignInMenu {
                     int id = Integer.parseInt(idField.getText());
                     boolean idPresent = true;
                     boolean dateReady = true;
-
+                    String timeIn = (LocalTime.now().toString()).substring(0, 8);
                     if (Main.logWriter.isIDPresent(id)) {
                         if (Main.logWriter.isDatePresent(date)) {
                             if (Main.logWriter.isSignInPresent(date, id)) {
                                 if (requestAdditional()) {
-                                    Main.logWriter.addDate(date);
+                                    if (!Main.logWriter.addExtraSignIn(date, id, timeIn)) {
+                                        Main.logWriter.addDate(date);
+                                    } else {
+                                        dateReady = false;
+                                        finishSignIn();
+                                    }
                                 } else {
                                     dateReady = false;
                                     JOptionPane.showMessageDialog(null, "Entry cancelled.");
@@ -91,11 +98,11 @@ public class SignInMenu {
                         idPresent = false;
                     }
                     if (idPresent && dateReady) {
-                        Main.signIn(date, id);
+                        Main.logWriter.addSignIn(id, timeIn, date);
                         finishSignIn();
                     }
 
-                } catch (NumberFormatException ex) {
+                } catch (NumberFormatException | IOException ex) {
                     JOptionPane.showMessageDialog(null, "ID may only contain numbers.");
                 }
 

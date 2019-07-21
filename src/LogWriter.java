@@ -43,6 +43,10 @@ public class LogWriter {
         return list;
     }
 
+    public String get(int row, int column) {
+        return list[row][column];
+    }
+
     public void addSignIn(int id, String timeIn, String date) throws IOException {
         int column = findID(id);
         int row = findDate(date).get(0);
@@ -109,6 +113,36 @@ public class LogWriter {
             }
         }
         return false;
+    }
+
+    /**
+     * Attemps to add an extra sign in time for a given date to the next blank slot
+     * that matches that date. Returns true if successful.
+     * 
+     * @param date   String representing date to add entry to
+     * @param id     int representing id to add entry to
+     * @param timeIn String respresenting time to enter
+     * @return boolean represents whether method successfully added the entry or not
+     */
+    public boolean addExtraSignIn(String date, int id, String timeIn) {
+        int column = findID(id);
+        int row = -1;
+        for (Integer i : findDate(date)) {
+            if (list[i][column] != null && list[i][column].equals(" ") || list[i][column] == null) {
+                row = i;
+            }
+        }
+        if (row != -1) {
+            System.out.println("row: " + row + " col: " + column);
+            list[row][column] = timeIn;
+            try {
+                writeToCSV();
+            } catch (IOException e) {
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public int getSignInRow(String date, int id) {
