@@ -1,13 +1,13 @@
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.swing.JOptionPane;
+
 public class Total {
     private String[][] list;
-    private String id;
     private int logRow;
 
     public Total(LogWriter w) throws IOException {
@@ -43,15 +43,19 @@ public class Total {
         long time2 = 0;
         String dateTime = "";
         while (logDate != null) {
+            time1 = 0;
+            time2 = 0;
             String time = list[logRow][column];
             if (time != null && !time.equals(" ")) {
                 dateTime = logDate + " " + time;
                 time1 = toMillis(dateTime);
-            }
-            if (time != null && !time.equals(" ")) {
                 time = list[logRow + 1][column];
-                dateTime = logDate + " " + time;
-                time2 = toMillis(dateTime);
+                if (time != null && !time.equals(" ")) {
+                    dateTime = logDate + " " + time;
+                    time2 = toMillis(dateTime);
+                } else {
+                    JOptionPane.showMessageDialog(null, "ID " + list[0][column] + " was not signed out on " + logDate);
+                }
             }
             long difference = time2 - time1;
             logDate = getNextDate();

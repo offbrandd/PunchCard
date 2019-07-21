@@ -12,10 +12,12 @@ public class Main {
     private static CreateMenu createMenu;
     private static SignInMenu signInMenu;
     private static SignOutMenu signOutMenu;
+    public static int frameWidth, frameHeight;
 
     public static void main(String[] args) throws Exception {
-        frame = new Frame();
-        mainMenu = new MainMenu(frame);
+        frameWidth = 1024;
+        frameHeight = 768;
+        frame = new Frame(1024, 768);
         createMenu = new CreateMenu(frame);
         signInMenu = new SignInMenu(frame);
         signOutMenu = new SignOutMenu(frame);
@@ -25,6 +27,7 @@ public class Main {
         totalWriter = new TotalWriter();
         create = new Create();
         total = new Total(logWriter);
+        mainMenu = new MainMenu(frame);
     }
 
     public static void mainMenu() {

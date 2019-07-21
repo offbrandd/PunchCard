@@ -1,5 +1,5 @@
 import java.io.*;
-import java.util.Scanner;
+import java.util.ArrayList;
 
 public class LogWriter {
     private BufferedReader reader;
@@ -43,9 +43,13 @@ public class LogWriter {
         return list;
     }
 
+    public String get(int row, int column) {
+        return list[row][column];
+    }
+
     public void addSignIn(int id, String timeIn, String date) throws IOException {
         int column = findID(id);
-        int row = findDate(date);
+        int row = findDate(date).get(0);
         list[row][column] = timeIn;
         writeToCSV();
     }
@@ -70,15 +74,14 @@ public class LogWriter {
         return false;
     }
 
-    public int findDate(String date) {
-        int row = 1;
+    public ArrayList<Integer> findDate(String date) {
+        ArrayList<Integer> rows = new ArrayList<Integer>();
         for (int i = list.length - 1; i >= 0; i--) {
             if (list[i][0] != null && list[i][0].equals(date)) {
-                row = i;
-                break;
+                rows.add(i);
             }
         }
-        return row;
+        return rows;
     }
 
     public boolean isDatePresent(String date) {
@@ -89,10 +92,11 @@ public class LogWriter {
         }
         return false;
     }
+
     public void addDate(String date) {
         int row = 0;
         for (int i = list.length - 1; i >= 0; i--) {
-            if(list[i][0] != null && !list[i][0].equals(" ")) {
+            if (list[i][0] != null && !list[i][0].equals(" ")) {
                 row = i + 2;
                 break;
             }
@@ -101,18 +105,61 @@ public class LogWriter {
     }
 
     public boolean isSignInPresent(String date, int id) {
-        int row = findDate(date);
         int column = findID(id);
-        if (list[row][column] != null && !list[row][column].equals(" ")) {
+        for (Integer i : findDate(date)) {
+            int row = i;
+            if (list[row][column] != null && !list[row][column].equals(" ")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Attemps to add an extra sign in time for a given date to the next blank slot
+     * that matches that date. Returns true if successful.
+     * 
+     * @param date   String representing date to add entry to
+     * @param id     int representing id to add entry to
+     * @param timeIn String respresenting time to enter
+     * @return boolean represents whether method successfully added the entry or not
+     */
+    public boolean addExtraSignIn(String date, int id, String timeIn) {
+        int column = findID(id);
+        int row = -1;
+        for (Integer i : findDate(date)) {
+            if (list[i][column] != null && list[i][column].equals(" ") || list[i][column] == null) {
+                row = i;
+            }
+        }
+        if (row != -1) {
+            System.out.println("row: " + row + " col: " + column);
+            list[row][column] = timeIn;
+            try {
+                writeToCSV();
+            } catch (IOException e) {
+            }
             return true;
         } else {
             return false;
         }
     }
-    public boolean isSignOutPresent(String date, int id) {
-        int row = findDate(date) + 1;
+
+    public int getSignInRow(String date, int id) {
         int column = findID(id);
-        if(list[row][column] != null && !list[row][column].equals(" ")) {
+        for (Integer i : findDate(date)) {
+            int row = i;
+            if (list[row][column] != null && !list[row][column].equals(" ")) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public boolean isSignOutPresent(int signInRow, int id) {
+        int column = findID(id);
+        int row = signInRow + 1;
+        if (list[row][column] != null && !list[row][column].equals(" ")) {
             return true;
         } else {
             return false;
@@ -121,7 +168,7 @@ public class LogWriter {
 
     public void addSignOut(int id, String timeOut, String date) throws IOException {
         int column = findID(id);
-        int row = findDate(date) + 1;
+        int row = findDate(date).get(0) + 1;
         list[row][column] = timeOut;
         writeToCSV();
     }
@@ -158,5 +205,6 @@ public class LogWriter {
             writer.write("\n");
         }
         writer.flush();
+        toArray();
     }
 }

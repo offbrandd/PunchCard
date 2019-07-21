@@ -81,7 +81,6 @@ public class CreateMenu {
                     }
                     boolean writeName = true;
                     if (Main.totalWriter.isNamePresent(name)) {
-                        System.out.println("Name is Present");
                         writeName = requestDuplicateName();
                     }
                     if (writeName && !idPresent) {

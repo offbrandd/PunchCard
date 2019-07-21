@@ -1,6 +1,8 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -70,30 +72,37 @@ public class SignInMenu {
                     String date = LocalDate.now().toString();
                     int id = Integer.parseInt(idField.getText());
                     boolean idPresent = true;
-                    if (!Main.logWriter.isIDPresent(id)) {
+                    boolean dateReady = true;
+                    String timeIn = (LocalTime.now().toString()).substring(0, 8);
+                    if (Main.logWriter.isIDPresent(id)) {
+                        if (Main.logWriter.isDatePresent(date)) {
+                            if (Main.logWriter.isSignInPresent(date, id)) {
+                                if (requestAdditional()) {
+                                    if (!Main.logWriter.addExtraSignIn(date, id, timeIn)) {
+                                        Main.logWriter.addDate(date);
+                                    } else {
+                                        dateReady = false;
+                                        finishSignIn();
+                                    }
+                                } else {
+                                    dateReady = false;
+                                    JOptionPane.showMessageDialog(null, "Entry cancelled.");
+                                }
+                            }
+                        } else {
+                            Main.logWriter.addDate(date);
+                        }
+                    } else {
                         JOptionPane.showMessageDialog(null,
                                 "ID is not registered. Please create a profile or try again with another ID");
                         idPresent = false;
                     }
-                    boolean dateReady = true;
-                    if (Main.logWriter.isDatePresent(date)) {
-                        if (Main.logWriter.isSignInPresent(date, id)) {
-                            if (requestAdditional()) {
-                                Main.logWriter.addDate(date);
-                            } else {
-                                dateReady = false;
-                                JOptionPane.showMessageDialog(null, "Entry cancelled.");
-                            }
-                        }
-                    } else {
-                        Main.logWriter.addDate(date);
-                    }
                     if (idPresent && dateReady) {
-                        Main.signIn(date, id);
+                        Main.logWriter.addSignIn(id, timeIn, date);
                         finishSignIn();
                     }
 
-                } catch (NumberFormatException ex) {
+                } catch (NumberFormatException | IOException ex) {
                     JOptionPane.showMessageDialog(null, "ID may only contain numbers.");
                 }
 
@@ -118,6 +127,7 @@ public class SignInMenu {
             return false;
         }
     }
+
     private void clearTextBoxes() {
         idField.setText("");
     }
