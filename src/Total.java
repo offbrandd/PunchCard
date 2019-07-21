@@ -43,23 +43,23 @@ public class Total {
         long time2 = 0;
         String dateTime = "";
         while (logDate != null) {
+            time1 = 0;
+            time2 = 0;
             String time = list[logRow][column];
             if (time != null && !time.equals(" ")) {
                 dateTime = logDate + " " + time;
                 time1 = toMillis(dateTime);
-            }
-            time = list[logRow + 1][column];
-            if (time != null && !time.equals(" ")) {
-                dateTime = logDate + " " + time;
-                time2 = toMillis(dateTime);
-            } else {
-                JOptionPane.showMessageDialog(null, "ID " + list[0][column] + " was not signed out on " + logDate);
+                time = list[logRow + 1][column];
+                if (time != null && !time.equals(" ")) {
+                    dateTime = logDate + " " + time;
+                    time2 = toMillis(dateTime);
+                } else {
+                    JOptionPane.showMessageDialog(null, "ID " + list[0][column] + " was not signed out on " + logDate);
+                }
             }
             long difference = time2 - time1;
             logDate = getNextDate();
-            if (difference >= 0) {
-                totalDifference += difference;
-            }
+            totalDifference += difference;
         }
         return totalDifference;
     }

@@ -55,6 +55,28 @@ public class TotalWriter {
         }
     }
 
+    public String getNextID(int row) {
+        if (row < list.length) {
+            if (list[row][0] != null && !list[row][0].equals(" ")) {
+                return list[row][0];
+            }
+
+        }
+        return null;
+    }
+    public String getIDName() {
+        return "";
+    }
+
+    public String getName(String id) {
+        for(int i = 0; i < list.length; i++) {
+            if(list[i][0].equals(id)) {
+                return list[i][1];
+            }
+        }
+        return "n/a";
+    }
+
     public void addName(int id, String name, Scanner scanner) {
         list[findID(id)][1] = name;
     }
@@ -67,6 +89,7 @@ public class TotalWriter {
         }
         return false;
     }
+
     public boolean isIDPresent(int id) {
         for (int i = 1; i < list.length; i++) {
             if (list[i][0] != null && list[i][0].equals(Integer.toString(id))) {
@@ -120,11 +143,12 @@ public class TotalWriter {
         }
         writer.flush();
     }
+
     public void closingMessage() {
         String path = totals.getAbsolutePath();
         String temp = path;
         path = temp.substring(0, temp.indexOf("src"));
-        path += temp.substring(temp.indexOf("..") + 3); //removes the "src/../" from the absolute path
+        path += temp.substring(temp.indexOf("..") + 3); // removes the "src/../" from the absolute path
         JOptionPane.showMessageDialog(null, "Total hours successfully exported to: " + path);
     }
 

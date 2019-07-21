@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.ArrayList;
 
 public class LogWriter {
     private BufferedReader reader;
@@ -44,7 +45,7 @@ public class LogWriter {
 
     public void addSignIn(int id, String timeIn, String date) throws IOException {
         int column = findID(id);
-        int row = findDate(date);
+        int row = findDate(date).get(0);
         list[row][column] = timeIn;
         writeToCSV();
     }
@@ -69,15 +70,14 @@ public class LogWriter {
         return false;
     }
 
-    public int findDate(String date) {
-        int row = 1;
+    public ArrayList<Integer> findDate(String date) {
+        ArrayList<Integer> rows = new ArrayList<Integer>();
         for (int i = list.length - 1; i >= 0; i--) {
             if (list[i][0] != null && list[i][0].equals(date)) {
-                row = i;
-                break;
+                rows.add(i);
             }
         }
-        return row;
+        return rows;
     }
 
     public boolean isDatePresent(String date) {
@@ -101,18 +101,30 @@ public class LogWriter {
     }
 
     public boolean isSignInPresent(String date, int id) {
-        int row = findDate(date);
         int column = findID(id);
-        if (list[row][column] != null && !list[row][column].equals(" ")) {
-            return true;
-        } else {
-            return false;
+        for (Integer i : findDate(date)) {
+            int row = i;
+            if (list[row][column] != null && !list[row][column].equals(" ")) {
+                return true;
+            }
         }
+        return false;
     }
 
-    public boolean isSignOutPresent(String date, int id) {
-        int row = findDate(date) + 1;
+    public int getSignInRow(String date, int id) {
         int column = findID(id);
+        for (Integer i : findDate(date)) {
+            int row = i;
+            if (list[row][column] != null && !list[row][column].equals(" ")) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public boolean isSignOutPresent(int signInRow, int id) {
+        int column = findID(id);
+        int row = signInRow + 1;
         if (list[row][column] != null && !list[row][column].equals(" ")) {
             return true;
         } else {
@@ -122,7 +134,7 @@ public class LogWriter {
 
     public void addSignOut(int id, String timeOut, String date) throws IOException {
         int column = findID(id);
-        int row = findDate(date) + 1;
+        int row = findDate(date).get(0) + 1;
         list[row][column] = timeOut;
         writeToCSV();
     }
@@ -159,5 +171,6 @@ public class LogWriter {
             writer.write("\n");
         }
         writer.flush();
+        toArray();
     }
 }

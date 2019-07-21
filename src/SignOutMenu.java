@@ -78,10 +78,11 @@ public class SignOutMenu {
                     } else {
                         dateReady = true;
                         if (Main.logWriter.isDatePresent(date)) {
+                            int signInRow = Main.logWriter.getSignInRow(date, id);
                             if (!Main.logWriter.isSignInPresent(date, id)) {
                                 JOptionPane.showMessageDialog(null,
                                         "This ID was not signed in for today. Sign out will be logged. Please see administrator with sign in time for manual entry.");
-                            } else if(Main.logWriter.isSignOutPresent(date, id)) {
+                            } else if(Main.logWriter.isSignOutPresent(signInRow, id)) {
                                 if(!requestOverwrite()) {
                                     dateReady = false;
                                 }
