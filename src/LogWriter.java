@@ -9,7 +9,7 @@ public class LogWriter {
     private int maxRows, maxCols;
 
     public LogWriter() throws FileNotFoundException, IOException {
-        log = new File("../output/log.csv");
+        log = new File("output/log.csv");
         reader = new BufferedReader(new FileReader(log));
         writer = new BufferedWriter(new FileWriter(log, true));
         maxRows = 100;

@@ -11,7 +11,7 @@ public class TotalWriter {
     private int maxRows, maxCols;
 
     public TotalWriter() throws IOException {
-        totals = new File("../output/totals.csv");
+        totals = new File("output/totals.csv");
         reader = new BufferedReader(new FileReader(totals));
         writer = new BufferedWriter(new FileWriter(totals, true));
         maxRows = 20;
@@ -146,9 +146,6 @@ public class TotalWriter {
 
     public void closingMessage() {
         String path = totals.getAbsolutePath();
-        String temp = path;
-        path = temp.substring(0, temp.indexOf("src"));
-        path += temp.substring(temp.indexOf("..") + 3); // removes the "src/../" from the absolute path
         JOptionPane.showMessageDialog(null, "Total hours successfully exported to: " + path);
     }
 

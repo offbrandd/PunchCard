@@ -162,6 +162,10 @@ public class SignOutMenu {
     private void clearTextBoxes() {
         idField.setText("");
     }
+    public void setIDText(String id) {
+		idField.setText(id);
+		confirm.doClick();
+	}
 
     private void finishSignOut() {
         JOptionPane.showMessageDialog(null, "Sign Out time successfully entered.");

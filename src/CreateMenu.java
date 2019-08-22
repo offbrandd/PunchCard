@@ -119,6 +119,9 @@ public class CreateMenu {
         idField.setText("");
         nameField.setText("");
     }
+    public void setIDText(String id) {
+		idField.setText(id);
+	}
 
     private void finishCreation() {
         JOptionPane.showMessageDialog(null, "Profile successfully created. You may now sign in");
