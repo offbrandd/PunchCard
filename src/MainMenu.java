@@ -1,4 +1,3 @@
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -9,7 +8,7 @@ import javax.swing.*;
 
 public class MainMenu {
     private Frame frame;
-    private JPanel panel, labelPanel;
+    private JPanel panel;
     private ArrayList<JLabel> nameList;
     private JButton signIn, signOut, create, total;
     private ArrayList<JComponent> components;
