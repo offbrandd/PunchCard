@@ -1,6 +1,4 @@
 import java.io.*;
-import java.util.Scanner;
-
 import javax.swing.JOptionPane;
 
 public class TotalWriter {
@@ -77,7 +75,7 @@ public class TotalWriter {
         return "n/a";
     }
 
-    public void addName(int id, String name, Scanner scanner) {
+    public void addName(int id, String name) {
         list[findID(id)][1] = name;
     }
 
