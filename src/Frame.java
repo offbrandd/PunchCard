@@ -1,3 +1,5 @@
+import java.awt.Graphics;
+
 import javax.swing.*;
 
 public class Frame {
@@ -26,5 +28,8 @@ public class Frame {
 
     public void repaint() {
         frame.repaint();
+    }
+    public void setDefaultButton(JButton b) {
+    	frame.getRootPane().setDefaultButton(b);
     }
 }

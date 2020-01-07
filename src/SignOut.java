@@ -50,6 +50,7 @@ public class SignOut {
 		isVisible = !isVisible;
 		if (isVisible) {
 			frame.addComponent(panel);
+			frame.setDefaultButton(confirm);
 		} else {
 			frame.removeComponent(panel);
 		}
@@ -87,14 +88,11 @@ public class SignOut {
 		});
 		allOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					signAllOut();
-				} catch (IOException ex) {
-				}
+				signAllOut();
 			}
 		});
 	}
-	public void addSignOut(LogWriter w, String date, int id) throws IOException {
+	public void addSignOut(LogWriter w, String date, int id) {
 		String timeOut = (LocalTime.now().toString()).substring(0, 8);
 		w.addSignOut(id, timeOut, date);
 	}
@@ -153,12 +151,12 @@ public class SignOut {
 
 	}
 
-	private void signAllOut() throws IOException {
+	private void signAllOut() {
 		int j = 1;
 		String id = Main.logWriter.get(0, j);
 		String date = LocalDate.now().toString();
 		String timeOut = (LocalTime.now().toString()).substring(0, 8);
-		while (id != null && !id.equals(" ")) {
+		while (id != null && !id.equals("")) {
 			if (Main.logWriter.isSignInPresent(date, Integer.parseInt(id))) {
 				int signInRow = Main.logWriter.getSignInRow(date, Integer.parseInt(id));
 				if (!Main.logWriter.isSignOutPresent(signInRow, Integer.parseInt(id))) {
@@ -168,6 +166,7 @@ public class SignOut {
 			j++;
 			id = Main.logWriter.get(0, j);
 		}
+		finishSignOut();
 	}
 
 	private boolean requestOverwrite() {

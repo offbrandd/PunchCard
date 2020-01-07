@@ -2,6 +2,8 @@ import java.io.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 public class LogWriter {
 	private BufferedReader reader;
 	private BufferedWriter writer;
@@ -9,37 +11,60 @@ public class LogWriter {
 	private String[][] list;
 	private int maxRows, maxCols;
 
-	public LogWriter() throws FileNotFoundException, IOException {
+	public LogWriter() {
 		log = new File("output/log.csv");
-		reader = new BufferedReader(new FileReader(log));
-		writer = new BufferedWriter(new FileWriter(log, true));
+		try {
+			//InputStream in = new FileInputStream(log);
+			//reader = new BufferedReader(new InputStreamReader(in));
+			//OutputStream out = new FileOutputStream(log, true);
+			//writer = new BufferedWriter(new OutputStreamWriter(out));
+			//writer = new BufferedWriter(new FileWriter(log, true));
+			reader = new BufferedReader(new FileReader(log));
+	        writer = new BufferedWriter(new FileWriter(log, true));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		maxRows = 100;
-		maxCols = 20;
+		maxCols = 40;
 		list = new String[maxRows][maxCols];
 		list[0][0] = "Attendance";
 	}
 
-	public void toArray() throws IOException {
-		String line = reader.readLine();
-		String temp = null;
-		int items = 0;
-		for (int i = 0; line != null && i < 100; i++) {
-			temp = line;
-			items = temp.length() - (temp.replace(",", "").length());
-			for (int j = 0; j < items + 1; j++) {
-				if (line.indexOf(",") != -1) {
-					list[i][j] = line.substring(0, line.indexOf(","));
-					line = line.substring(line.indexOf(",") + 1);
-				} else if (!line.equals("")) {
-					list[i][j] = line;
-					line = "";
+	public void toArray() {
+		try {
+			String line = reader.readLine();
+			String temp = null;
+			int items = 0;
+			for (int i = 0; line != null && i < 100; i++) {
+				temp = line;
+				items = countChar(temp, ",");
+				for (int j = 0; j < items + 1; j++) {
+					if (line.indexOf(",") != -1) {
+						list[i][j] = line.substring(0, line.indexOf(","));
+						line = line.substring(line.indexOf(",") + 1);
+					} else if (!line.equals("")) {
+						list[i][j] = line;
+						line = "";
+					}
 				}
+				line = reader.readLine();
 			}
-			line = reader.readLine();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
+	public static int countChar(String str, String c) {
+		String s = str;
+		int count = 0;
+		for(int i = 0; i < str.length(); i++) {
+			if(str.substring(i, i + 1).equals(c)) {
+				count++;
+			}
+		}
+		return count;
+	}
 
-	public String[][] getArray() throws IOException {
+	public String[][] getArray() {
 		toArray();
 		return list;
 	}
@@ -48,7 +73,7 @@ public class LogWriter {
 		return list[row][column];
 	}
 
-	public void addSignIn(int id, String timeIn, String date) throws IOException {
+	public void addSignIn(int id, String timeIn, String date) {
 		int column = findID(id);
 		int row = findDate(date).get(0);
 		list[row][column] = timeIn;
@@ -56,13 +81,7 @@ public class LogWriter {
 	}
 
 	public int findID(int id) {
-		try {
-			toArray();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		toArray();
 		int column = -1;
 		for (int j = 1; j < list[0].length; j++) {
 			if (list[0][j] != null && list[0][j].equals(Integer.toString(id))) {
@@ -74,12 +93,7 @@ public class LogWriter {
 	}
 
 	public boolean isIDPresent(int id) {
-		try {
-			toArray();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		toArray();
 		for (int j = 1; j < list[0].length; j++) {
 			if (list[0][j] != null && list[0][j].equals(Integer.toString(id))) {
 				return true;
@@ -110,19 +124,25 @@ public class LogWriter {
 	public void addDate(String date) {
 		int row = 0;
 		for (int i = list.length - 1; i >= 0; i--) {
-			if (list[i][0] != null && !list[i][0].equals(" ")) {
+			if (list[i][0] != null && !list[i][0].equals("")) {
 				row = i + 2;
 				break;
 			}
 		}
-		list[row][0] = date;
+		try {
+			list[row][0] = date;
+		} catch (IndexOutOfBoundsException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "E");
+
+		}
 	}
 
 	public boolean isSignInPresent(String date, int id) {
 		int column = findID(id);
 		for (Integer i : findDate(date)) {
 			int row = i;
-			if (list[row][column] != null && !list[row][column].equals(" ")) {
+			if (list[row][column] != null && !list[row][column].equals("")) {
 				return true;
 			}
 		}
@@ -142,16 +162,13 @@ public class LogWriter {
 		int column = findID(id);
 		int row = -1;
 		for (Integer i : findDate(date)) {
-			if (list[i][column] != null && list[i][column].equals(" ") || list[i][column] == null) {
+			if (list[i][column] != null && list[i][column].equals("") || list[i][column] == null) {
 				row = i;
 			}
 		}
 		if (row != -1) {
 			list[row][column] = timeIn;
-			try {
-				writeToCSV();
-			} catch (IOException e) {
-			}
+			writeToCSV();
 			return true;
 		} else {
 			return false;
@@ -162,7 +179,7 @@ public class LogWriter {
 		int column = findID(id);
 		for (Integer i : findDate(date)) {
 			int row = i;
-			if (list[row][column] != null && !list[row][column].equals(" ")) {
+			if (list[row][column] != null && !list[row][column].equals("")) {
 				return i;
 			}
 		}
@@ -172,21 +189,21 @@ public class LogWriter {
 	public boolean isSignOutPresent(int signInRow, int id) {
 		int column = findID(id);
 		int row = signInRow + 1;
-		if (list[row][column] != null && !list[row][column].equals(" ")) {
+		if (list[row][column] != null && !list[row][column].equals("")) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public void addSignOut(int id, String timeOut, String date) throws IOException {
+	public void addSignOut(int id, String timeOut, String date) {
 		int column = findID(id);
 		int row = 0;
 		boolean ready = false;
 		int i = 0;
 		while(!ready) {
 			row = findDate(date).get(i);
-			if(list[row][column] == null || list[row][column].equals(" ")) {
+			if(list[row][column] == null || list[row][column].equals("")) {
 				i++;
 			} else {
 				ready = true;
@@ -197,10 +214,10 @@ public class LogWriter {
 		writeToCSV();
 	}
 
-	public void addID(int id) throws IOException {
+	public void addID(int id) {
 		int column = -1;
 		for (int j = 0; j < list[0].length; j++) {
-			if ((list[0][j] != null && list[0][j].equals(" ")) || list[0][j] == null) {
+			if ((list[0][j] != null && list[0][j].equals("")) || list[0][j] == null) {
 				column = j;
 				break;
 			}
@@ -210,45 +227,43 @@ public class LogWriter {
 
 	}
 
-	public void writeToCSV() throws IOException {
-		reader.close();
-		writer.close();
-		log.delete();
-		log.createNewFile();
-		reader = new BufferedReader(new FileReader(log));
-		writer = new BufferedWriter(new FileWriter(log, true));
+	public void writeToCSV() {
+		try {
+			reader.close();
+			writer.close();
+			log.delete();
+			log.createNewFile();
+			reader = new BufferedReader(new FileReader(log));
+			writer = new BufferedWriter(new FileWriter(log, true));
 
-		for (int i = 0; i < list.length; i++) {
-			for (int j = 0; j < list[0].length; j++) {
-				if (list[i][j] != null) {
-					writer.write(list[i][j] + ",");
-				} else {
-					writer.write(" ,");
+			for (int i = 0; i < list.length; i++) {
+				for (int j = 0; j < list[0].length; j++) {
+					if (list[i][j] != null) {
+						writer.write(list[i][j] + ",");
+					} else {
+						writer.write(",");
+					}
 				}
+				writer.write("\n");
 			}
-			writer.write("\n");
+			writer.flush();
+			toArray();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		writer.flush();
-		toArray();
 	}
 
 	@Override
 	public String toString()
 	{
-		try {
-			String[][] a = getArray();
-			String s = "{";
-			for(int i = 0; i < a.length; i++) {
-				for(int j = 0; j < a[0].length; j++) {
-					s += a[i][j] + " ";
-				}
-				s += "\n";
+		String[][] a = getArray();
+		String s = "{";
+		for(int i = 0; i < a.length; i++) {
+			for(int j = 0; j < a[0].length; j++) {
+				s += a[i][j] + "";
 			}
-			return s;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			s += "\n";
 		}
-		return null;
+		return s;
 	}
 }

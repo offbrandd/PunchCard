@@ -35,6 +35,7 @@ public class SignIn {
 		components.add(idLabel);
 		isVisible = false;
 		createComponents();
+
 	}
 
 	public void addComponents() {
@@ -48,6 +49,7 @@ public class SignIn {
 		isVisible = !isVisible;
 		if (isVisible) {
 			frame.addComponent(panel);
+			frame.setDefaultButton(confirm);
 		}
 		else {
 			frame.removeComponent(panel);
@@ -69,6 +71,7 @@ public class SignIn {
 	private void addActions() {
 		confirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				confirm();
 			}
 		});
 		home.addActionListener(new ActionListener() {
@@ -82,7 +85,6 @@ public class SignIn {
 	private void confirm() {
 		try {
 			String date = LocalDate.now().toString();
-			//check if they want to scan, if not, then use text field
 			int id = Integer.parseInt(idField.getText());
 			boolean idPresent = true;
 			boolean dateReady = true;
@@ -115,12 +117,12 @@ public class SignIn {
 				finishSignIn();
 			}
 
-		} catch (NumberFormatException | IOException ex) {
+		} catch (NumberFormatException ex) {
 			JOptionPane.showMessageDialog(null, "ID may only contain numbers.");
 		}
 
 	}
-	public void confirmAuto(int id) {
+	public boolean confirmAuto(int id) {
 		try {
 			String date = LocalDate.now().toString();
 			//check if they want to scan, if not, then use text field
@@ -135,10 +137,12 @@ public class SignIn {
 							} else {
 								dateReady = false;
 								finishSignIn();
+								return true;
 							}
 						} else {
 							dateReady = false;
 							JOptionPane.showMessageDialog(null, "Entry cancelled.");
+							return false;
 						}
 					}
 				} else {
@@ -146,11 +150,13 @@ public class SignIn {
 				}
 			if (idPresent && dateReady) {
 				Main.logWriter.addSignIn(id, timeIn, date);
+				return true;
 			}
 
-		} catch (NumberFormatException | IOException ex) {
+		} catch (NumberFormatException ex) {
 			JOptionPane.showMessageDialog(null, "ID may only contain numbers.");
 		}
+		return false;
 
 	}
 
@@ -174,7 +180,7 @@ public class SignIn {
 		confirm.doClick();
 	}
 	
-    public void toLogWriter(LogWriter w, String date, int id) throws IOException {
+    public void toLogWriter(LogWriter w, String date, int id) {
         String timeIn = (LocalTime.now().toString()).substring(0, 8);
         w.addSignIn(id, timeIn, date);
     }

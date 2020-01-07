@@ -50,6 +50,7 @@ public class Create {
         isVisible = !isVisible;
         if (isVisible) {
             frame.addComponent(panel);
+    		frame.setDefaultButton(confirm);
         } else {
             frame.removeComponent(panel);
         }
@@ -81,7 +82,7 @@ public class Create {
                         notifyDuplicateID();
                     }
                     boolean writeName = true;
-                    if (Main.totalWriter.isNamePresent(name)) {
+                    if (Main.totalWriter.isNamePresent(name) && idPresent == false) {
                         writeName = requestDuplicateName();
                     }
                     if (writeName && !idPresent) {
@@ -102,7 +103,7 @@ public class Create {
         });
     }
     
-    public void registerID(LogWriter w, TotalWriter t, String name, int id) throws IOException {
+    public void registerID(LogWriter w, TotalWriter t, String name, int id) {
         t.addID(id);
         w.addID(id);
         t.addName(id, name);

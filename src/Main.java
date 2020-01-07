@@ -39,31 +39,33 @@ public class Main {
 			boolean hasScanned = false;
 			public void run() {
 				while(true) {
-					System.out.println(state);
+					//TODO: ask morton why thread would on run again (after going from one of the menus to the main) if there was a print statement after the while loop in the thread.
 					if(state == AppState.MAIN) {
 						if(!hasScanned) {
-							try{
+							try {
 								code = BarcodeScanner.searchForBarcode();
-								if(code != null) {
-									currentBarcode = code;
-									try {
-										automaticPunch();
-										hasScanned = true;
-									} catch (ParseException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-								}
-								Thread.sleep(500);
-							} catch(InterruptedException v){
-								System.out.println(v);
+							} catch (NullPointerException e) {
+								mainMenu.camNotFound.setVisible(true);
+							}
+							if(code != null) {
+								currentBarcode = code;
+								automaticPunch();
+								hasScanned = true;
 							}
 						} else {
 							code = BarcodeScanner.searchForBarcode();
-							if(code == null) {
+							if(code != null) {
 								hasScanned = false;
 							}
 						}
+					} else {
+						//barcode.interrupt();
+					}
+					try  {
+
+						Thread.sleep(500);
+					} catch(InterruptedException e){
+						e.printStackTrace();
 					}
 				}
 			}
@@ -71,7 +73,7 @@ public class Main {
 		barcode.start();
 	}
 
-	public static void automaticPunch() throws ParseException {
+	public static void automaticPunch() {
 		if(mainMenu.isCreated(currentBarcode, logWriter)) {
 			boolean isSignedIn = mainMenu.isSignedIn(currentBarcode);
 			if(isSignedIn) {
@@ -80,8 +82,9 @@ public class Main {
 				mainMenu.refresh();
 				frame.repaint();
 			} else if(!isSignedIn) {
-				signIn.confirmAuto(Integer.parseInt(currentBarcode));
-				JOptionPane.showMessageDialog(null, "Sign In time successfully entered. Remove ID then click 'OK'");
+				if(signIn.confirmAuto(Integer.parseInt(currentBarcode))) {
+					JOptionPane.showMessageDialog(null, "Sign In time successfully entered. Remove ID then click 'OK'");
+				}
 				mainMenu.refresh();
 				frame.repaint();
 			}
@@ -108,12 +111,8 @@ public class Main {
 		signIn.toggleVisible();
 	}
 	public static void signIn(String date, int id) {
-		try {
-			logWriter.toArray();
-			signIn.toLogWriter(logWriter, date, id);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		logWriter.toArray();
+		signIn.toLogWriter(logWriter, date, id);
 
 	}
 	public static void showSignOut() {
@@ -122,12 +121,8 @@ public class Main {
 		signOut.toggleVisible();
 	}
 	public static void signOut(String date, int id) {
-		try {
-			logWriter.toArray();
-			signOut.addSignOut(logWriter, date, id);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		logWriter.toArray();
+		signOut.addSignOut(logWriter, date, id);
 	}
 
 	public static void showCreate() {
@@ -137,22 +132,12 @@ public class Main {
 
 	}
 	public static void create(String name, int id) {
-		try {
-			logWriter.toArray();
-			create.registerID(logWriter, totalWriter, name, id);
-		} catch (IOException e) {
-			System.out.println("IOException @ Main.java, 82");
-		}
+		logWriter.toArray();
+		create.registerID(logWriter, totalWriter, name, id);
 	}
 
 	public static void total() {
-		try {
-			total.getTotals(totalWriter);
-		} catch (ParseException e) {
-			System.out.println(e);
-		} catch (IOException e) {
-			System.out.println(e);
-		}
+		total.getTotals(totalWriter);
 	}
 	private static void resetBarcode() {
 		currentBarcode = null;
