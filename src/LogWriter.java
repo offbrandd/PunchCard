@@ -1,6 +1,7 @@
 import java.io.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
@@ -10,17 +11,13 @@ public class LogWriter {
 	private File log;
 	private String[][] list;
 	private int maxRows, maxCols;
+	private InputStream in;
 
 	public LogWriter() {
-		log = new File("output/log.csv");
+		log = new File("./output/log.csv");
 		try {
-			//InputStream in = new FileInputStream(log);
-			//reader = new BufferedReader(new InputStreamReader(in));
-			//OutputStream out = new FileOutputStream(log, true);
-			//writer = new BufferedWriter(new OutputStreamWriter(out));
-			//writer = new BufferedWriter(new FileWriter(log, true));
 			reader = new BufferedReader(new FileReader(log));
-	        writer = new BufferedWriter(new FileWriter(log, true));
+			writer = new BufferedWriter(new FileWriter(log, true));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
