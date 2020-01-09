@@ -9,7 +9,7 @@ public class TotalWriter {
     private int maxRows, maxCols;
 
     public TotalWriter() {
-        totals = new File("output/totals.csv");
+        totals = new File("./output/totals.csv");
         try {
 			reader = new BufferedReader(new FileReader(totals));
 	        writer = new BufferedWriter(new FileWriter(totals, true));
