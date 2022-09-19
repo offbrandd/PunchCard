@@ -1,1 +1,2 @@
-"# PunchCard" 
+# PunchCard
+A client-facing attendance tracking software made for my former high school Robotics. Software was intended to be used from a shared PC and allowed Students to scan their IDs in order to log their punch-ins and punch-outs (stored in .csv). Software allowed administrator (in this case me) to automatic compile the attendace data and create a human readable report detailing the culmilative hours each student had accrued. 
